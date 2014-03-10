@@ -1,15 +1,32 @@
-class razor::server {
-  $url  = 'http://links.puppetlabs.com/razor-server-latest.zip'
-  $dest = '/opt/razor'
+class razor::server (
+  $url      = 'http://links.puppetlabs.com/razor-server-latest.zip',
+  $dest     = '/opt/razor',
+  $revision = 'master',
+){
 
-  # Put the archive into place, if needed.
-  exec { "install razor binary distribution to ${dest}":
-    provider => shell,
-    command  => template('razor/install-zip.sh.erb'),
-    path     => '/bin:/usr/bin:/usr/local/bin:/opt/bin',
-    creates  => "${dest}/bin/razor-admin",
-    require  => [Package[curl], Package[unzip]],
-    notify   => Exec["deploy razor to torquebox"]
+  if $url =~ /\.git$/ {
+    ensure_resource( 'package', 'git', { ensure => 'latest' } )
+    vcsrepo { 'razor-server':
+      ensure   => 'latest',
+      provider => 'git',
+      path     => $dest,
+      source   => $url,
+      owner    => 'root',
+      group    => 'root',
+      revision => $revision,
+      require  => Package['git'],
+    }
+  }
+  else {
+    # Put the archive into place, if needed.
+    exec { "install razor binary distribution to ${dest}":
+      provider => shell,
+      command  => template('razor/install-zip.sh.erb'),
+      path     => '/bin:/usr/bin:/usr/local/bin:/opt/bin',
+      creates  => "${dest}/bin/razor-admin",
+      require  => [Package[curl], Package[unzip]],
+      notify   => Exec["deploy razor to torquebox"]
+    }
   }
 
   exec { "deploy razor if it was undeployed":

@@ -17,7 +17,10 @@
 class razor (
   $servername = $fqdn,
   $libarchive = undef,
-  $tftp       = true
+  $tftp       = true,
+  $url        = 'http://links.puppetlabs.com/razor-server-latest.zip',
+  $revision   = 'master',
+  $dest       = '/opt/razor',
 ) {
   # Ensure libarchive is installed -- the users requested custom version, or
   # our own guesswork as to what the version is on this platform.
@@ -39,7 +42,12 @@ class razor (
   include 'razor::torquebox'
 
   # Once that is installed, we also need to install the server software.
-  include 'razor::server'
+  class { 'razor::server' :
+    url      => $url,
+    revision => $revision,
+    dest     => $dest,
+  }
+
   Class[Razor::Torquebox] -> Class[Razor::Server]
 
   if $tftp {
