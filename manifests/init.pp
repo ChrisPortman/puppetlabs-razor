@@ -15,12 +15,24 @@
 #   include razor
 #
 class razor (
-  $servername = $fqdn,
-  $libarchive = undef,
-  $tftp       = true,
-  $url        = 'http://links.puppetlabs.com/razor-server-latest.zip',
-  $revision   = 'master',
-  $dest       = '/opt/razor',
+  $servername        = $fqdn,
+  $libarchive        = undef,
+  $tftp              = true,
+  $url               = 'http://links.puppetlabs.com/razor-server-latest.zip',
+  $revision          = 'master',
+  $dest              = '/opt/razor',
+  $prd_database_host = undef,
+  $prd_database_name = undef',
+  $prd_database_user = undef,
+  $prd_database_pass = undef,
+  $dev_database_host = undef,
+  $dev_database_name = undef,
+  $dev_database_user = undef,
+  $dev_database_pass = undef,
+  $tst_database_host = undef,
+  $tst_database_name = undef,
+  $tst_database_user = undef,
+  $tst_database_pass = undef,
 ) {
   # Ensure libarchive is installed -- the users requested custom version, or
   # our own guesswork as to what the version is on this platform.

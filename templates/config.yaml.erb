@@ -1,0 +1,101 @@
+---
+# This is the configuration file for the Razor server. For each
+# environment, the file contains a hash of configuration values. The
+# special environment 'all' is used to set configuration values for all
+# environments
+#
+# The *database_url* setting must be a connection URL for
+# (Sequel)[http://sequel.rubyforge.org/rdoc/files/doc/opening_databases_rdoc.html]
+
+<%- if @prd_database_name and @prd_database_user and @prd_database_pass -%> 
+production:
+<%- if @prd_database_host -%>
+  database_url: 'jdbc:postgresql://<%= @prd_database_host -%>/<%= @prd_database_name -%>?user=<%= @prd_database_user -%>&password=<%= @prd_database_pass -%>'
+<%- else -%>
+  database_url: 'jdbc:postgresql:<%= @prd_database_name -%>?user=<%= @prd_database_user -%>&password=<%= @prd_database_pass -%>'
+<%- end -%>
+<%- end -%>
+<%- if @dev_database_name and @dev_database_user and @dev_database_pass -%> 
+development:
+<%- if @dev_database_host -%>
+  database_url: 'jdbc:postgresql://<%= @dev_database_host -%>/<%= @dev_database_name -%>?user=<%= @dev_database_user -%>&password=<%= @dev_database_pass -%>'
+<%- else -%>
+  database_url: 'jdbc:postgresql:<%= @dev_database_name -%>?user=<%= @dev_database_user -%>&password=<%= @dev_database_pass -%>'
+<%- end -%>
+<%- end -%>
+<%- if @tst_database_name and @tst_database_user and @tst_database_pass -%> 
+test:
+<%- if @tst_database_host -%>
+  database_url: 'jdbc:postgresql://<%= @tst_database_host -%>/<%= @tst_database_name -%>?user=<%= @tst_database_user -%>&password=<%= @tst_database_pass -%>'
+<%- else -%>
+  database_url: 'jdbc:postgresql:<%= @tst_database_name -%>?user=<%= @tst_database_user -%>&password=<%= @tst_database_pass -%>'
+<%- end -%>
+<%- end -%>
+all:
+  # This section configures authentication for the Razor server.
+  # Authentication applies to access to the `/api` URL path only.
+  auth:
+    # You can enable or disable authentication support.  When disabled, all
+    # authentication is ignored and access to `/api` is unrestricted.
+    # When enabled a valid username and password must be present in all
+    # requests to `/api`.
+    enabled: false
+    # The path to the authentication configuration file.  We use Apache Shiro
+    # to manage authentication, since it provides a solid and effective
+    # abstraction over common third party sources of authentication and role
+    # management information.
+    #
+    # You can learn more about the content of this file in their documentation:
+    # http://shiro.apache.org/configuration.html
+    #
+    # If this is an absolute path it will be used as-is, but if you give a
+    # relative path it is relative to the root directory of the
+    # Razor installation.
+    config: shiro.ini
+
+  microkernel:
+    debug_level: debug
+    kernel_args:
+
+  # How to match nodes to possibly existing nodes in the database. The node
+  # sends us the MAC addresses of its network interfaces, serial number,
+  # asset tag, and UUID. We consider two nodes to be the same if they agree
+  # on any of the values named in the array +match_nodes_on+. Array entries
+  # can be any of 'mac', 'serial', 'asset', or 'uuid', in any order.
+  #
+  # Note that if you have nodes that have dummy values for one of these,
+  # e.g. that all have an asset tag of 'No asset tag' and +match_nodes_on+
+  # contains 'asset', all these nodes will be assumed to be the
+  # same. Better yet: make sure that +match_nodes_on+ does not contain
+  # 'asset' in that situation
+  #
+  # By default, we only match on MAC's, which is generally safe, but will
+  # cause trouble if the NIC's in a node are ever completely
+  # replaced. Consider adding one of the other possible values, e.g. 'uuid'
+  # to the array
+  match_nodes_on:
+<%- @primary_node_match.each do |match| -%>
+    - <%= match %>
+<%- end -%>
+  secondary_match_nodes_on:
+<%- @secondary_node_match.each do |match| -%>
+    - <%= match %>
+<%- end -%>
+  checkin_interval: <%= @node_checkin_interval %>
+  # Colon-separated list of paths; each entry must be a directory in which
+  # we should look for tasks
+  task_path: <%= @task_path %>
+  repo_store_root: <%= @repo_store_root %>
+  # The *broker_path* is a colon separated list of directories containing
+  # broker types
+  broker_path: <%= @broker_path %>
+  facts:
+    # Facts that we should always ignore. These are stripped out before we
+    # do anything else with facts coming in from a node. Each entry in this
+    # array can either be a string (literal name of a fact) or a regexp
+    # enclosed in /../ where any fact that matches the regexp will be
+    # dropped
+    blacklist:
+<%- @facts_blacklist.each do |fact| -%>
+      - <%= fact %>
+<%- end -%>
