@@ -1,14 +1,14 @@
 class razor::database (
   $postgres_password = 'postgr3s',
-  $prd_database_name = 'razor',
-  $prd_database_user = 'razor',
-  $prd_database_pass = 'r@z0r',
-  $dev_database_name = undef,
-  $dev_database_user = undef,
-  $dev_database_pass = undef,
-  $tst_database_name = undef,
-  $tst_database_user = undef,
-  $tst_database_pass = undef,
+  $prd_database_name     = $razor::params::database_name,
+  $prd_database_user     = $razor::params::database_user,
+  $prd_database_pass     = $razor::params::database_pass,
+  $dev_database_name     = undef,
+  $dev_database_user     = undef,
+  $dev_database_pass     = undef,
+  $tst_database_name     = undef,
+  $tst_database_user     = undef,
+  $tst_database_pass     = undef,
 ) {
   class { 'postgresql::server' :
     listen_addresses  => '*',

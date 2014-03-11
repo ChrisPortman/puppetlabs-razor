@@ -2,18 +2,6 @@ class razor::server (
   $url      = 'http://links.puppetlabs.com/razor-server-latest.zip',
   $dest     = '/opt/razor',
   $revision = 'master',
-  $prd_database_host     = undef,
-  $prd_database_name     = 'razor',
-  $prd_database_user     = 'razor',
-  $prd_database_pass     = 'r@z0r',
-  $dev_database_host     = undef,
-  $dev_database_name     = undef,
-  $dev_database_user     = undef,
-  $dev_database_pass     = undef,
-  $tst_database_host     = undef,
-  $tst_database_name     = undef,
-  $tst_database_user     = undef,
-  $tst_database_pass     = undef,
 ){
 
   if $url =~ /\.git$/ {
@@ -57,20 +45,6 @@ class razor::server (
     }
   }
 
-  if ! $prd_database_host or $prd_database_host == $::fqdn or $prd_database_host == $::ipaddress {
-    class { 'razor::database' :
-      prd_database_name => $prd_database_name,
-      prd_database_user => $prd_database_user,
-      prd_database_pass => $prd_database_pass,
-      dev_database_name => $dev_database_name,
-      dev_database_user => $dev_database_user,
-      dev_database_pass => $dev_database_pass,
-      tst_database_name => $tst_database_name,
-      tst_database_user => $tst_database_user,
-      tst_database_pass => $tst_database_pass,
-    }
-  }
-
   exec { "deploy razor if it was undeployed":
     provider => shell,
     unless   => "test -f ${razor::torquebox::dest}/jboss/standalone/deployments/razor-knob.yml",
@@ -90,11 +64,6 @@ class razor::server (
     ],
     path        => "${razor::torquebox::dest}/jruby/bin:/bin:/usr/bin:/usr/local/bin",
     refreshonly => true
-  }
-
-  file { "${dest}/config.yaml" :
-    ensure  => file, owner => root, group => root, mode => 0755,
-    content => template('razor/config.yaml.erb'),
   }
 
   file { "${dest}/bin/razor-binary-wrapper":
