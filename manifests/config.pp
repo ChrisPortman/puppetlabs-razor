@@ -24,7 +24,6 @@ class razor::config (
   file { "${dest}/config.yaml" :
     ensure  => file, owner => root, group => root, mode => 0755,
     content => template('razor/config.yaml.erb'),
-    notify  => Service['razor-server'],
   }
 
 }
