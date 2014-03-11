@@ -1,8 +1,8 @@
 class razor::server (
   $url      = 'http://links.puppetlabs.com/razor-server-latest.zip',
-  $dest     = '/opt/razor',
+  $dest     = $razor::params::dest,
   $revision = 'master',
-){
+) inherits razor::params {
 
   if $url =~ /\.git$/ {
     ensure_resource( 'package', 'git', { ensure => 'latest' } )

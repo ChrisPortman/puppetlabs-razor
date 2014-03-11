@@ -1,11 +1,11 @@
 class razor::params {
   $source                = 'package'
+  $dest                  = '/opt/razor'
   $primary_node_match    = [ 'mac' ]
   $secondary_node_match  = []
   $node_checkin_interval = '15'
   $task_path             = 'tasks'
   $broker_path           = 'brokers'
-  $repo_store_root       = '/var/lib/razor/repo-store'
   $facts_blacklist       = [
     'domain',
     'filesystems',

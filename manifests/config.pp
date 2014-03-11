@@ -1,4 +1,5 @@
 class razor::config (
+  $dest                  = $razor::params::dest,
   $primary_node_match    = $razor::params::primary_node_match,
   $secondary_node_match  = $razor::params::secondary_node_match,
   $node_checkin_interval = $razor::params::node_checkin_interval,
@@ -23,6 +24,7 @@ class razor::config (
   file { "${dest}/config.yaml" :
     ensure  => file, owner => root, group => root, mode => 0755,
     content => template('razor/config.yaml.erb'),
+    notify  => Service['razor-server'],
   }
 
 }
