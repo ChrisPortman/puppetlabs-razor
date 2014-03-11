@@ -21,6 +21,7 @@ class razor::server (
         File["${dest}/bin/razor-binary-wrapper"],
         File["${dest}/bin/razor-admin"],
         File["${dest}/bin/razor-admin"],
+        File["${dest}/config.yaml"],
         File["${dest}/log"],
       ],
     }
@@ -40,6 +41,7 @@ class razor::server (
         File["${dest}/bin/razor-binary-wrapper"],
         File["${dest}/bin/razor-admin"],
         File["${dest}/bin/razor-admin"],
+        File["${dest}/config.yaml"],
         File["${dest}/log"],
       ],
     }
