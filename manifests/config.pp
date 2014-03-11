@@ -18,7 +18,7 @@ class razor::config (
   $tst_database_name     = undef,
   $tst_database_user     = undef,
   $tst_database_pass     = undef,
-) {
+) inherits razor::params {
 
   file { "${dest}/config.yaml" :
     ensure  => file, owner => root, group => root, mode => 0755,
