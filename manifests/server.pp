@@ -33,7 +33,7 @@ class razor::server (
       path     => '/bin:/usr/bin:/usr/local/bin:/opt/bin',
       creates  => "${dest}/bin/razor-admin",
       require  => [Package[curl], Package[unzip]],
-      notify   => Exec["deploy razor to torquebox"]
+      notify   => Exec["deploy razor to torquebox"],
       before   => [ 
         Exec["deploy razor if it was undeployed"],
         Exec["deploy razor to torquebox"],
